@@ -320,12 +320,12 @@ $(document).ready(function(){
               })
 
 						}else if(data == "3"){
-                window.location.href = 'mgt_dashboard';
+                window.location.href = 'admin/home.php';
               }else if(data == "2"){
-								window.location.href = 'search';
+								window.location.href = 'admin/home.php';
 								// window.location.href = 'ctr_dashboard';
 							}else {
-									window.location.href = 'fac_dashboard';
+									window.location.href = 'admin/home.php';
 							}
 
          });
