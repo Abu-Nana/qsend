@@ -1,22 +1,22 @@
 version: '3.8'
 
 services:
-  qsend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: qsend-app
+  web:
+    build: .
+    container_name: questionsending-web
+    volumes:
+      - ./code:/var/www/html
+      - ./php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    environment:
+      - VIRTUAL_HOST=qsend.nou.edu.ng
+      - APP_ENV=production
+    networks:
+      - appnet
     ports:
       - "8080:80"
-    volumes:
-      - ./logs:/var/www/html/logs
-    environment:
-      - APP_ENV=production
     restart: unless-stopped
-    networks:
-      - qsend-network
 
 networks:
-  qsend-network:
-    driver: bridge
+  appnet:
+    external: true
 

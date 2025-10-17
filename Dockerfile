@@ -35,14 +35,11 @@ RUN a2enmod rewrite headers
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application files from code directory
-COPY code/ /var/www/html/
-
-# Create necessary directories
+# Create necessary directories and set permissions
+# Note: Code will be mounted as volume, not copied
 RUN mkdir -p /var/www/html/logs \
     && chmod -R 755 /var/www/html \
-    && chown -R www-data:www-data /var/www/html \
-    && chmod -R 777 /var/www/html/logs
+    && chown -R www-data:www-data /var/www/html
 
 # Configure Apache
 RUN echo '<Directory /var/www/html>\n\
