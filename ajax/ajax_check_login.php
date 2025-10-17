@@ -21,7 +21,7 @@ $pwd= md5($t_pwd);
 
 
 
-$query ="SELECT username, firstname, lastname, type, password, id
+$query ="SELECT id, username, firstname, lastname, cat, password
 FROM admin
 WHERE username ='$t_usr' AND password='$pwd'";
 
@@ -39,27 +39,22 @@ $_SESSION['email']=$t_usr;
 while ($rw = $stmt->fetch(PDO::FETCH_BOTH, PDO::FETCH_ORI_NEXT))
 {
 	$data="";
-  $_SESSION['usrid']= $rw[5]; // id
-  $_SESSION['username']= $rw[0]; // username
-  $_SESSION['name'] = $rw[1] . ' ' . $rw[2]; // firstname + lastname
-  $_SESSION['u_cat'] = $rw[3]; // type
-  $_SESSION['admin'] = $rw[5]; // id for admin session
+  $_SESSION['usrid']= $rw[0]; // id
+  $_SESSION['admin'] = $rw[0]; // id for admin session
+  $_SESSION['username']= $rw[1]; // username
+  $_SESSION['name'] = $rw[2] . ' ' . $rw[3]; // firstname + lastname
+  $_SESSION['u_cat'] = $rw[4]; // cat
 
-	// Map type to appropriate redirect
-	$user_type = intval($rw[3]);
-	switch ($user_type) {
-		case 1: // Administrator
-			$_SESSION['role'] = "System Administrator";
-			$data = "3"; // Management dashboard
-			break;
-		case 2: // Regular user
-			$_SESSION['role'] = "Faculty User";
-			$data = "2"; // Search
-			break;
-		default:
-			$_SESSION['role'] = "User";
-			$data = "1"; // Faculty dashboard
-			break;
+	// Check if user is DEA or regular user based on 'cat' column
+	$cat = intval($rw[4]);
+	if ($cat == 1) {
+		// DEA user - management dashboard
+		$_SESSION['role'] = "System Administrator";
+		$data = "3"; // mgt_dashboard
+	} else {
+		// Regular user - search page
+		$_SESSION['role'] = "Faculty User";
+		$data = "2"; // search
 	}
 }
 echo $data;
