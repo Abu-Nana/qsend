@@ -1,10 +1,8 @@
 <?php
-// session_start();
-include "../inc/pdo_connectdb.php";
-include '../inc/ajax_get_session.php';
-// $configfile = "../inc/pdo_trans_connectdb.php";
+session_start();
+require_once __DIR__ . '/../config/database.php';
+$conn = Database::getPDO();
 $ddate = date("Y-m-d");
-// require $configfile;
 $_SESSION['email']="";
 $t_usr="";
 $t_pwd="";
