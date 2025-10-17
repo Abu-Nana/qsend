@@ -84,7 +84,7 @@ cd "$DOCKER_DIR" || exit 1
 # Rebuild and restart Docker container
 log "Rebuilding Docker container..."
 docker-compose down
-log "Building new image..."
+log "Building new image (this copies from code/ directory)..."
 docker-compose build --no-cache
 log "Starting container..."
 docker-compose up -d

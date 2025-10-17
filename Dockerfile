@@ -35,8 +35,8 @@ RUN a2enmod rewrite headers
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application files
-COPY . /var/www/html/
+# Copy application files from code directory
+COPY code/ /var/www/html/
 
 # Create necessary directories
 RUN mkdir -p /var/www/html/logs \
