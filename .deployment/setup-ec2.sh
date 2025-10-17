@@ -86,7 +86,7 @@ echo -e "${GREEN}Step 7: Initializing git in app directory${NC}"
 cd "$APP_DIR"
 if [ ! -d .git ]; then
     git init
-    git remote add origin https://github.com/deatech-aws/qsend.git
+    git remote add origin https://github.com/Abu-Nana/qsend.git
     git fetch origin main
     git reset --hard origin/main
     echo "Git repository initialized and synced"

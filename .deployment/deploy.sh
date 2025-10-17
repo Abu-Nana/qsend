@@ -7,7 +7,7 @@ set -e  # Exit on error
 
 # Configuration
 APP_DIR="/home/ubuntu/docker-apps/questionsending/code"
-REPO_URL="https://github.com/deatech-aws/qsend.git"
+REPO_URL="https://github.com/Abu-Nana/qsend.git"
 BRANCH="main"
 DOCKER_DIR="/home/ubuntu/docker-apps/questionsending"
 LOG_FILE="/home/ubuntu/docker-apps/questionsending/deployment.log"
