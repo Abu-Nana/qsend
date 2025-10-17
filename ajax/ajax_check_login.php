@@ -21,9 +21,9 @@ $pwd= md5($t_pwd);
 
 
 
-$query ="SELECT usr_name,acct_name,usr_cat,usr_passwords,unit_code,pwd_reset
-FROM usr_acct
-WHERE usr_name ='$t_usr' AND usr_passwords='$pwd'";
+$query ="SELECT username, firstname, lastname, type, password, id
+FROM admin
+WHERE username ='$t_usr' AND password='$pwd'";
 
 // echo $query;
 //exit;
@@ -39,51 +39,28 @@ $_SESSION['email']=$t_usr;
 while ($rw = $stmt->fetch(PDO::FETCH_BOTH, PDO::FETCH_ORI_NEXT))
 {
 	$data="";
-  $_SESSION['usrid']= $rw[0];
-  $_SESSION['name'] = $rw[1];
-  $_SESSION['u_cat'] = $rw[2];
-  $_SESSION['pwd_reset']=$rw[5];
-	// $_SESSION['role_id']= $rw[4];
+  $_SESSION['usrid']= $rw[5]; // id
+  $_SESSION['username']= $rw[0]; // username
+  $_SESSION['name'] = $rw[1] . ' ' . $rw[2]; // firstname + lastname
+  $_SESSION['u_cat'] = $rw[3]; // type
+  $_SESSION['admin'] = $rw[5]; // id for admin session
 
-	switch ($_SESSION['u_cat']) {
-		case 'ADMIN':
-		$_SESSION['role'] ="System Administrator";
-			$data="1";
+	// Map type to appropriate redirect
+	$user_type = intval($rw[3]);
+	switch ($user_type) {
+		case 1: // Administrator
+			$_SESSION['role'] = "System Administrator";
+			$data = "3"; // Management dashboard
 			break;
-		case 'DEAN':
-		case 'FAEO':
-		$_SESSION['role'] ="Faculty User";
-		$_SESSION['fac_id']= $rw[4];
-			$data="2";
+		case 2: // Regular user
+			$_SESSION['role'] = "Faculty User";
+			$data = "2"; // Search
 			break;
-	case 'FHOD';
-	case 'FDEO':
-	$_SESSION['role'] ="Department User";
-	$_SESSION['dept_id']= $rw[4];
-	  $data="3";
+		default:
+			$_SESSION['role'] = "User";
+			$data = "1"; // Faculty dashboard
 			break;
- 	case 'TECHO':
-	case 'HDSS':
-	$_SESSION['role'] ="Helpdesk/Support";
-	 $data="4";
-		break;
-	case 'FPCT':
-	$_SESSION['role'] ="Program User";
-	$_SESSION['prog_id']= $rw[4];
-		$data="5";
-		break;
-	case 'SPGS':
-		$data="6";
-		break;
-	case 'MGMT':
-	$_SESSION['role'] ="Management User";
-		$data="7";
-		break;
 	}
-}
-if ($_SESSION['pwd_reset']==1){
-	$data="9";
-	// break;
 }
 echo $data;
 $stmt->closeCursor();
