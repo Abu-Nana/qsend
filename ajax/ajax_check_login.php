@@ -46,8 +46,8 @@ while ($rw = $stmt->fetch(PDO::FETCH_BOTH, PDO::FETCH_ORI_NEXT))
   $_SESSION['u_cat'] = $rw[4]; // cat
 
 	// Check if user is DEA or regular user based on 'cat' column
-	$cat = intval($rw[4]);
-	if ($cat == 1) {
+	$cat = strtolower(trim($rw[4]));
+	if ($cat == 'dea') {
 		// DEA user - management dashboard
 		$_SESSION['role'] = "System Administrator";
 		$data = "3"; // mgt_dashboard
