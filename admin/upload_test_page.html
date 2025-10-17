@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Test Page</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        input[type="file"] { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Upload Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Simple Upload Handler</h2>
+        <form id="simpleForm">
+            <div>
+                <label>Upload Type:</label>
+                <select name="upload_type">
+                    <option value="default">Default</option>
+                    <option value="makeup">Makeup</option>
+                </select>
+            </div>
+            <div>
+                <label>Folder Name:</label>
+                <input type="text" name="folder_name" placeholder="Enter folder name">
+            </div>
+            <div>
+                <label>ZIP File:</label>
+                <input type="file" name="zip_file" accept=".zip">
+            </div>
+            <div>
+                <label>PDF Files:</label>
+                <input type="file" name="pdf_files[]" accept=".pdf" multiple>
+            </div>
+            <button type="button" onclick="testSimpleUpload()">Test Simple Upload</button>
+        </form>
+        <div id="simpleResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Direct Upload Handler</h2>
+        <form id="directForm">
+            <div>
+                <label>Upload Type:</label>
+                <select name="upload_type">
+                    <option value="default">Default</option>
+                    <option value="makeup">Makeup</option>
+                </select>
+            </div>
+            <div>
+                <label>Folder Name:</label>
+                <input type="text" name="folder_name" placeholder="Enter folder name">
+            </div>
+            <div>
+                <label>ZIP File:</label>
+                <input type="file" name="zip_file" accept=".zip">
+            </div>
+            <div>
+                <label>PDF Files:</label>
+                <input type="file" name="pdf_files[]" accept=".pdf" multiple>
+            </div>
+            <button type="button" onclick="testDirectUpload()">Test Direct Upload</button>
+        </form>
+        <div id="directResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Original Upload Handler</h2>
+        <form id="originalForm">
+            <div>
+                <label>Upload Type:</label>
+                <select name="upload_type">
+                    <option value="default">Default</option>
+                    <option value="makeup">Makeup</option>
+                </select>
+            </div>
+            <div>
+                <label>Upload Method:</label>
+                <select name="upload_method">
+                    <option value="zip">ZIP</option>
+                    <option value="pdf">PDF</option>
+                </select>
+            </div>
+            <div>
+                <label>Folder Name:</label>
+                <input type="text" name="folder_name" placeholder="Enter folder name">
+            </div>
+            <div>
+                <label>ZIP File:</label>
+                <input type="file" name="zip_file" accept=".zip">
+            </div>
+            <div>
+                <label>PDF Files:</label>
+                <input type="file" name="pdf_files[]" accept=".pdf" multiple>
+            </div>
+            <button type="button" onclick="testOriginalUpload()">Test Original Upload</button>
+        </form>
+        <div id="originalResult"></div>
+    </div>
+    
+    <script>
+    function testSimpleUpload() {
+        var formData = new FormData(document.getElementById('simpleForm'));
+        
+        $.ajax({
+            url: 'ajax_upload_simple.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log('Simple upload response:', response);
+                $('#simpleResult').html('<div class="result success">Success: ' + JSON.stringify(response, null, 2) + '</div>');
+            },
+            error: function(xhr, status, error) {
+                console.log('Simple upload error:', error);
+                $('#simpleResult').html('<div class="result error">Error: ' + error + '<br>Response: ' + xhr.responseText + '</div>');
+            }
+        });
+    }
+    
+    function testDirectUpload() {
+        var formData = new FormData(document.getElementById('directForm'));
+        
+        $.ajax({
+            url: 'ajax_upload_direct.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log('Direct upload response:', response);
+                $('#directResult').html('<div class="result success">Success: ' + JSON.stringify(response, null, 2) + '</div>');
+            },
+            error: function(xhr, status, error) {
+                console.log('Direct upload error:', error);
+                $('#directResult').html('<div class="result error">Error: ' + error + '<br>Response: ' + xhr.responseText + '</div>');
+            }
+        });
+    }
+    
+    function testOriginalUpload() {
+        var formData = new FormData(document.getElementById('originalForm'));
+        
+        $.ajax({
+            url: 'ajax_upload_questions.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log('Original upload response:', response);
+                $('#originalResult').html('<div class="result success">Success: ' + JSON.stringify(response, null, 2) + '</div>');
+            },
+            error: function(xhr, status, error) {
+                console.log('Original upload error:', error);
+                $('#originalResult').html('<div class="result error">Error: ' + error + '<br>Response: ' + xhr.responseText + '</div>');
+            }
+        });
+    }
+    </script>
+</body>
+</html>

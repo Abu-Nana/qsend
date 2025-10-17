@@ -1,0 +1,108 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    
+    # Only run on merged PRs or direct pushes to main
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Get commit info
+        id: commit_info
+        run: |
+          echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+          echo "author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
+      
+      - name: Validate PHP syntax
+        run: |
+          find . -name "*.php" -not -path "./vendor/*" -not -path "./bower_components/*" -not -path "./node_modules/*" -exec php -l {} \; | grep -v "No syntax errors"
+        continue-on-error: true
+      
+      - name: Check for sensitive data
+        run: |
+          echo "Checking for potential sensitive data..."
+          if grep -r "password\s*=\s*['\"].*['\"]" --include="*.php" --exclude-dir={vendor,bower_components,node_modules} .; then
+            echo "⚠️  Warning: Found hardcoded passwords (this is just a warning)"
+          fi
+        continue-on-error: true
+      
+      - name: Trigger EC2 Deployment
+        env:
+          WEBHOOK_URL: ${{ secrets.EC2_WEBHOOK_URL }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+        run: |
+          echo "Triggering deployment webhook..."
+          
+          # Create webhook payload
+          PAYLOAD=$(cat <<EOF
+          {
+            "ref": "refs/heads/${{ github.ref_name }}",
+            "commits": [{
+              "id": "${{ steps.commit_info.outputs.sha }}",
+              "message": "${{ steps.commit_info.outputs.message }}",
+              "author": {
+                "name": "${{ steps.commit_info.outputs.author }}"
+              }
+            }],
+            "pusher": {
+              "name": "${{ github.actor }}"
+            },
+            "repository": {
+              "name": "${{ github.repository }}"
+            }
+          }
+          EOF
+          )
+          
+          # Calculate signature
+          SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | sed 's/^.* //')
+          
+          # Send webhook request
+          RESPONSE=$(curl -X POST "$WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -H "X-GitHub-Event: push" \
+            -H "X-Hub-Signature-256: sha256=$SIGNATURE" \
+            -d "$PAYLOAD" \
+            -w "\n%{http_code}" \
+            -s)
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "Response Code: $HTTP_CODE"
+          echo "Response Body: $BODY"
+          
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "✅ Deployment triggered successfully!"
+          else
+            echo "❌ Deployment failed with code $HTTP_CODE"
+            exit 1
+          fi
+      
+      - name: Deployment Status
+        run: |
+          echo "🚀 Deployment initiated!"
+          echo "📦 Commit: ${{ steps.commit_info.outputs.sha }}"
+          echo "👤 Author: ${{ steps.commit_info.outputs.author }}"
+          echo "📝 Message: ${{ steps.commit_info.outputs.message }}"
+          echo ""
+          echo "Check deployment logs on EC2 at:"
+          echo "  /home/ubuntu/docker-apps/questionsending/deployment.log"
+

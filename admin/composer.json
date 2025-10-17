@@ -1,0 +1,9 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^6.6",
+        "africastalking/africastalking": "^3.0",
+        "setasign/fpdi": "^2.3",
+        "setasign/fpdf": "^1.8",
+        "setasign/fpdi-fpdf": "^2.3"
+    }
+}

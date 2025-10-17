@@ -1,0 +1,4 @@
+matric_number,study_center,study_center_code,course,exam_day,exam_session,exa_date
+TEST001,Test Study Center,TSC01,CS101,Monday,2024/2025,2024-12-01
+TEST002,Test Study Center,TSC01,CS102,Tuesday,2024/2025,2024-12-02
+TEST003,Another Center,AC01,CS103,Wednesday,2024/2025,2024-12-03

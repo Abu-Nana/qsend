@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  qsend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: qsend-app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./logs:/var/www/html/logs
+    environment:
+      - APP_ENV=production
+    restart: unless-stopped
+    networks:
+      - qsend-network
+
+networks:
+  qsend-network:
+    driver: bridge
+

@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff PaySlip</title>
+    <style>
+        /*@font-face {*/
+        /*font-family: DejaVu Sans;*/
+        /*src: url(/assets/fonts/Calibri.ttf);*/
+        /*}*/
+        #watermark {
+            position: fixed;
+            top:   6cm;
+            left:     3cm;
+            /** The width and height may change
+                according to the dimensions of your letterhead
+            **/
+            width:    21.8cm;
+            height:   28cm;
+
+            /** Your watermark should be behind every content**/
+            z-index:  -1000;
+            opacity: 0.3%;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 1cm;
+            left: 0cm;
+            left: 0cm;
+            height: 2cm;
+        }
+
+    </style>
+</head>
+<body>
+<div id="watermark">
+    <img src="https://i.postimg.cc/DS1ggx2t/logo.png" style="height: 550px; width: 500px;" />
+</div>
+
+<footer>
+    <table width="100%" style="margin-top: 100px;">
+        <tbody>
+        <tr>
+            <td width="10%"></td>
+            <td width="40%" style="font-size: 14px; color: #00d285; font-family: DejaVu Sans; font-weight: initial; font-style: italic;">Powered by – NOUN Payroll</td>
+            <td width="33%"></td>
+            <td width="7%"><img style="height: 25px; width: 27px;" src="https://i.postimg.cc/DS1ggx2t/logo.png"></td>
+        </tr>
+        </tbody>
+    </table>
+</footer>
+
+
+
+<table width="100%">
+    <tr>
+        <td width="20%"><img style="height: 85px; width: 90px; margin-left: 50px;  text-align: left;" src="https://i.postimg.cc/c4S5MJV1/coat-of-arm.jpg"></td>
+        <td width="60%">
+            <table style="vertical-align: top;">
+                <tr><td style="font-size: 19px; font-family: DejaVu Sans; font-weight: 700; text-align: center;">FEDERAL GOVERNMENT OF NIGERIA</td></tr>
+                <tr><td style="font-size: 14px; font-family: DejaVu Sans; font-weight: bold; text-align: center;">IPPIS TERTIARY INSTITUTIONS</td></tr>
+                <tr><td style="font-size: 14px; font-family: DejaVu Sans; font-weight: bold; text-align: center;">EMPLOYEE PAYSLIP <br/> {{row.month}} {{row.year}} </td></tr>
+            </table>
+        </td>
+        <td width="20%"><img style="height: 65px; width: 70px;" src="https://i.postimg.cc/DS1ggx2t/logo.png"></td>
+    </tr>
+</table>
+
+<table width="100%" style="margin-top: 50px;">
+    <tbody>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Employee Name: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Full_Name}} </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Grade: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Grade}} </td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">IPPIS ID: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.IPPIS_ID}} </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Step: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Grade_Step}} </td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Legacy ID: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.id}} </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Gender: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.gender}} </td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">MDA/School/Command: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.School}} </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Tax State: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.tax_state}}</td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Department: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Department}} </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">TIN: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.TIN}} </td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Location: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Location}} </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Date of Appointment: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.date_of_appointment}} </td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Job: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Job_Title}} </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Date of Birth: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.date_of_birth}} </td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Union Name: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.union_name}} </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">NHF Number:  </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.nhf_number}}  </td>
+    </tr>
+         <tr>
+    
+       <td style="font-size: 9px; font-family: DejaVu Sans;"> <br><hr></td>
+        <td style="font-size: 9px; font-family: DejaVu Sans;"> <br><hr></td>
+        <td style="font-size: 9px; font-family: DejaVu Sans; font-weight: bold;"><br><hr> </td>
+        <td style="font-size: 9px; font-family: DejaVu Sans;"><br><hr> </td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold; text-decoration: underline;">Bank Information Details: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;"> </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;"> </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;"> </td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Bank Name: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Bank_Name}} </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">PFA Name: </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Pension_Administrator}} </td>
+    </tr>
+    <tr>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Account Number: <hr> </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Account_Number}} <hr> </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Pension PIN: <hr> </td>
+        <td style="font-size: 10px; font-family: DejaVu Sans;">{{row2.Pension_PIN}} <hr> </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<table width="100%">
+    <tr>
+        <td width="50%" style="vertical-align:top;">
+            <table>
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold; text-decoration: underline;">Gross Earnings Information </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td width="80%" style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Earnings &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                    <td align="left" width="20%" style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Amount</td>
+                </tr>
+                {% if not (row.APRIL_Retro_Arrears is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">APRIL Retro Arrears </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.APRIL_Retro_Arrears}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.AUG_RETRO_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">AUG RETRO ARREARS </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.AUG_RETRO_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.CONTEDISS_Cons_Salary is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">CONTEDISS Cons Salary </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.CONTEDISS_Cons_Salary}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.CONTISS_Cons_Salary is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">CONTISS Cons Salary </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.CONTISS_Cons_Salary}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.CONUASS_Cons_Salary is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">CONUASS Cons Salary </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.CONUASS_Cons_Salary}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.FEB_Retro_Arrears is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">FEB Retro Arrears </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.FEB_Retro_Arrears}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.JULY_RETRO_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">JULY RETRO ARREARS </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.JULY_RETRO_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.JUNE_Retro_Arrears is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">JUNE Retro Arrears </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.JUNE_Retro_Arrears}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.MARCH_Retro_Arrears is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">MARCH Retro Arrears </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.MARCH_Retro_Arrears}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.May_Retro_Arrears is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">May Retro Arrears </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.May_Retro_Arrears}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOV_RETRO_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NOV RETRO ARREARS </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOV_RETRO_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.OCT_RETRO_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">OCT RETRO ARREARS </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.OCT_RETRO_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.SEP_RETRO_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">SEPT RETRO ARREARS </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.SEP_RETRO_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.Resposibility_allowance is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">Resposibility Allowance </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.Resposibility_allowance}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.Unspecified_arrears is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">Unspecified Arrears </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.Unspecified_arrears}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.Total_Gross is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">Total Gross </td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans;"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.Total_Gross}} </td>
+                </tr>
+                {% endif %}
+            </table>
+        </td>
+        <td width="4%"></td>
+        <td width="46%" style="vertical-align:top;">
+            <table>
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold; text-decoration: underline;">Gross Deductions Information </td>
+                </tr>
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Deductions &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td align="left" style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold;">Amount </td>
+                </tr>
+                {% if not (row.FEDERAL_MORTGAGE_BANK_OF_NIGERIA is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">FEDERAL MORTGAGE BANK OF NIGERIA </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.FEDERAL_MORTGAGE_BANK_OF_NIGERIA}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_JULY_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED JULY ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_JULY_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_APR_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED APR ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_APR_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_AUG_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED AUG ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_AUG_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_FEB_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED FEB ARREARS</td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_FEB_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_MAR_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED MAR ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_MAR_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_JUNE_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED JUNE ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_JUNE_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_SEP_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED SEP ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_SEP_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_MAY_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED MAY ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_MAY_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_NOV_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED NOV ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_NOV_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NHF_DED_OCT_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NHF DED OCT ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NHF_DED_OCT_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOUN_CARLISLE is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NOUN CARLISLE </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOUN_CARLISLE}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOUN_BURSARY_7167WEMA is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NOUN BURSARY 7167WEMA </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOUN_BURSARY_7167WEMA}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOUN_CETED_COOP_9657IBTC is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;"  width="30%">NOUN CETED COOP 9657IBTC </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" width="20%" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOUN_CETED_COOP_9657IBTC}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOUN_DEBT_REFUND_1018CBN is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NOUN DEBT REFUND 1018CBN </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOUN_DEBT_REFUND_1018CBN}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOUN_MICROFINANCE_9355ZENITH is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NOUN MICROFINANCE 9355ZENITH </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOUN_MICROFINANCE_9355ZENITH}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOUN_MEDICAL_LOAN_1018CBN is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NOUN MEDICAL LOAN 1018CBN </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOUN_MEDICAL_LOAN_1018CBN}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOUN_MULTIPUR_COOP_3491ZENITH is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NOUN MULTIPUR COOP 3491ZENITH </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOUN_MULTIPUR_COOP_3491ZENITH}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOUN_RENT_DEDUCTION_1018CBN is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NOUN RENT DEDUCTION 1018CBN </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOUN_RENT_DEDUCTION_1018CBN}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.NOUN_SALARY_ADVANCE_1018CBN is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">NOUN SALARY ADVANCE 1018CBN </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.NOUN_SALARY_ADVANCE_1018CBN}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.OVERPAYMENT is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">OVERPAYMENT</td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.OVERPAYMENT}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_APR_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED APR ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_APR_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_AUG_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED AUG ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_AUG_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_FEB_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED FEB ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_FEB_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_JULY_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED JULY ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_JULY_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_JUNE_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED JUNE ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_JUNE_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_MAR_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED MAR ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_MAR_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_MAY_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED MAY ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_MAY_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_NOV_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED NOV ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_NOV_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_OCT_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED OCT ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_OCT_ARREARS}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.PENSION_DED_SEP_ARREARS is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">PENSION DED SEP ARREARS </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.PENSION_DED_SEP_ARREARS}} </td>
+                </tr>
+                {% if not (row.Salary_Refund is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">Salary Refund </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.Salary_Refund}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.Unspecified_Deduction is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">Unspecified Deduction </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.Unspecified_Deduction}} </td>
+                </tr>
+                {% endif %}
+                {% endif %}
+                <tr>
+                    <td colspan="2" style="font-size: 10px; font-family: DejaVu Sans; font-weight: bold; text-decoration: underline;">Summary of Payments </td>
+                </tr>
+                {% if not (row.Income_Tax is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">Income Tax </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.Income_Tax}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.Total_Deduction is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">Total Deduction </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.Total_Deduction}} </td>
+                </tr>
+                {% endif %}
+                {% if not (row.Net_Pay is empty) %}
+                <tr>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;">Net Pay </td>
+                    <td style="font-size: 10px; font-family: DejaVu Sans;" align="left"><span style="font-family: DejaVu Sans;">&#x20A6;</span>{{row.Net_Pay}} </td>
+                </tr>
+                {% endif %}
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+<br/>
+
+
+</body>
+</html>

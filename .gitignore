@@ -1,0 +1,63 @@
+# Environment and Configuration
+config/config.local.php
+config/config.production.php
+.env
+.env.local
+
+# Documentation files (as requested)
+*.md
+
+# Logs
+logs/
+php_errorlog
+error_log
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# Temporary files
+*.tmp
+*.temp
+sg-phpinfo-*.php
+
+# Archives and backups
+*.zip
+*.bak
+*.old
+*_old.*
+*_backup.*
+
+# Old/deprecated files
+old/
+
+# Vendor directories (if using Composer)
+vendor/
+node_modules/
+
+# PHP specific
+php.ini
+
+# Test files
+test_*.php
+TEST_*.txt
+
+# User uploaded content (if any)
+uploads/
+temp/
+
+# Database dumps
+*.sql
+database/*.sql
+!database/login_attempts.sql
+!database/pdf.sql

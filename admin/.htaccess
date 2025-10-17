@@ -1,0 +1,6 @@
+<IfModule mod_dtimeout.c> 
+<Files ~ ".php">
+SetEnvIf Request_URI "qsend2.phpp" DynamicTimeout=1800
+SetEnvIf Request_URI "pdf2.php" DynamicTimeout=1800
+</Files>
+</IfModule>
