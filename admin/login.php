@@ -1,72 +1,93 @@
 <?php
 /**
- * Secure Login Handler
- * 
- * This file handles admin authentication with:
- * - SQL injection protection
- * - Prepared statements
- * - Bcrypt password hashing
- * - Rate limiting
- * - Session security
- * 
- * @package QSEND
- * @version 2.0
+ * Simple Login Handler for QSEND
+ * Uses existing admin table with bcrypt passwords
  */
 
-// Include security class
-require_once __DIR__ . '/../config/Security.php';
+session_start();
 
-// Start secure session
-Security::startSecureSession();
+// Include database connection
+require_once __DIR__ . '/../config/database.php';
 
 // Redirect if already logged in
-if (isset($_SESSION['admin'])) {
-    header('location: home.php');
+if (isset($_SESSION['admin']) && !empty($_SESSION['admin'])) {
+    header('Location: home.php');
     exit;
 }
 
-if (isset($_POST['login'])) {
-    // Sanitize inputs
-    $username = Security::sanitizeInput($_POST['username']);
-    $password = $_POST['password']; // Don't sanitize password - verify as-is
+// Process login form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    
+    // Get form inputs
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
     
     // Validate inputs
     if (empty($username) || empty($password)) {
         $_SESSION['error'] = 'Please provide both username and password';
-        header('location: index.php');
+        header('Location: ../index.php');
         exit;
     }
     
-    // Initialize security class
-    $security = new Security();
-    
-    // Authenticate user
-    $result = $security->authenticateAdmin($username, $password);
-    
-    if ($result['success']) {
-        // Set session with regenerated ID for security
-        session_regenerate_id(true);
-        $_SESSION['admin'] = $result['user']['id'];
-        $_SESSION['username'] = $result['user']['username'];
-        $_SESSION['last_activity'] = time();
+    try {
+        // Get database connection
+        $pdo = Database::getPDO();
         
-        // Log successful login
-        error_log("Successful login: {$username} from {$_SERVER['REMOTE_ADDR']}");
+        // Query user from admin table
+        $stmt = $pdo->prepare("SELECT id, username, password, firstname, lastname, cat FROM admin WHERE username = ?");
+        $stmt->execute([$username]);
         
-        header('location: home.php');
-        exit;
-    } else {
-        $_SESSION['error'] = $result['error'];
+        if ($stmt->rowCount() === 0) {
+            // User not found
+            $_SESSION['error'] = 'Invalid username or password';
+            header('Location: ../index.php');
+            exit;
+        }
         
-        // Log failed login
-        error_log("Failed login attempt: {$username} from {$_SERVER['REMOTE_ADDR']}");
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        header('location: index.php');
+        // Verify password (supports bcrypt)
+        if (password_verify($password, $user['password'])) {
+            // Password correct - set session and redirect
+            session_regenerate_id(true);
+            
+            $_SESSION['admin'] = $user['id'];
+            $_SESSION['usrid'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['name'] = $user['firstname'] . ' ' . $user['lastname'];
+            $_SESSION['u_cat'] = $user['cat'];
+            $_SESSION['email'] = $user['username'];
+            
+            // Set role based on category
+            if (strtolower($user['cat']) === 'dea') {
+                $_SESSION['role'] = 'System Administrator';
+            } else {
+                $_SESSION['role'] = 'Faculty User';
+            }
+            
+            // Redirect to home page
+            header('Location: home.php');
+            exit;
+            
+        } else {
+            // Password incorrect
+            $_SESSION['error'] = 'Invalid username or password';
+            header('Location: ../index.php');
+            exit;
+        }
+        
+    } catch (PDOException $e) {
+        // Database error
+        error_log("Login error: " . $e->getMessage());
+        $_SESSION['error'] = 'System error. Please try again later.';
+        header('Location: ../index.php');
         exit;
     }
+    
 } else {
-    $_SESSION['error'] = 'Invalid request method';
-    header('location: index.php');
+    // Invalid request
+    $_SESSION['error'] = 'Invalid request';
+    header('Location: ../index.php');
     exit;
 }
-
+?>
