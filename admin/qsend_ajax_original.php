@@ -52,11 +52,18 @@ header('Content-Type: application/json');
 set_time_limit(300); // 5 minutes
 ini_set('max_execution_time', 300);
 
-require 'vendor3/autoload.php';
-use setasign\Fpdi\Fpdi;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
+// Check if vendor3/autoload.php exists
+if (file_exists('vendor3/autoload.php')) {
+    require 'vendor3/autoload.php';
+    use setasign\Fpdi\Fpdi;
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
+    use PHPMailer\PHPMailer\SMTP;
+    $vendor_loaded = true;
+} else {
+    writeLog("WARNING: vendor3/autoload.php not found - PDF processing will be limited");
+    $vendor_loaded = false;
+}
 
 // Create log file
 $log_file = 'email_original_' . date('Y-m-d_H-i-s') . '.log';
@@ -258,31 +265,39 @@ try {
                         copy($source_file, $destination_file);
                         writeLog("Copied file: $source_file to $destination_file");
                         
-                        // Add watermark using FPDI
-                        try {
-                            $pdf = new FPDI();
-                            $pageCount = $pdf->setSourceFile($destination_file);
-                            writeLog("PDF has $pageCount pages");
-                            
-                            for ($i = 1; $i <= $pageCount; $i++) {
-                                $tplIdx = $pdf->importPage($i);
-                                $pdf->AddPage();
-                                $pdf->useTemplate($tplIdx, 10, 10, 200);
-                                $pdf->SetFont('Arial', '', 5);
-                                $pdf->SetTextColor(255, 255, 255); // White text
-                                $pdf->SetXY(10, 10);
-                                $pdf->Write(0, "Study Centre: " . $study_center . " (" . $center . ")");
+                        // Add watermark using FPDI (if available)
+                        if ($vendor_loaded && class_exists('setasign\Fpdi\Fpdi')) {
+                            try {
+                                $pdf = new FPDI();
+                                $pageCount = $pdf->setSourceFile($destination_file);
+                                writeLog("PDF has $pageCount pages");
+                                
+                                for ($i = 1; $i <= $pageCount; $i++) {
+                                    $tplIdx = $pdf->importPage($i);
+                                    $pdf->AddPage();
+                                    $pdf->useTemplate($tplIdx, 10, 10, 200);
+                                    $pdf->SetFont('Arial', '', 5);
+                                    $pdf->SetTextColor(255, 255, 255); // White text
+                                    $pdf->SetXY(10, 10);
+                                    $pdf->Write(0, "Study Centre: " . $study_center . " (" . $center . ")");
+                                }
+                                $pdf->Output($destination_file, 'F');
+                                
+                                // Add to ZIP with encryption
+                                $zip->addFile($destination_file, basename($destination_file));
+                                $zip->setEncryptionName(basename($destination_file), ZipArchive::EM_AES_256, $password);
+                                $status = true;
+                                writeLog("Added watermarked PDF to ZIP: " . $obj['course']);
+                            } catch (Exception $pdf_error) {
+                                writeLog("ERROR: PDF processing failed: " . $pdf_error->getMessage());
+                                // Continue without watermarking
+                                $zip->addFile($destination_file, basename($destination_file));
+                                $zip->setEncryptionName(basename($destination_file), ZipArchive::EM_AES_256, $password);
+                                $status = true;
                             }
-                            $pdf->Output($destination_file, 'F');
-                            
-                            // Add to ZIP with encryption
-                            $zip->addFile($destination_file, basename($destination_file));
-                            $zip->setEncryptionName(basename($destination_file), ZipArchive::EM_AES_256, $password);
-                            $status = true;
-                            writeLog("Added watermarked PDF to ZIP: " . $obj['course']);
-                        } catch (Exception $pdf_error) {
-                            writeLog("ERROR: PDF processing failed: " . $pdf_error->getMessage());
-                            // Continue without watermarking
+                        } else {
+                            writeLog("WARNING: FPDI not available - adding PDF without watermark");
+                            // Add to ZIP with encryption (no watermark)
                             $zip->addFile($destination_file, basename($destination_file));
                             $zip->setEncryptionName(basename($destination_file), ZipArchive::EM_AES_256, $password);
                             $status = true;
