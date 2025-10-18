@@ -30,20 +30,20 @@ try {
     }
     echo "</ul>";
     
-    // If student_registration exists, show structure
-    if (in_array('student_registration', $tables)) {
-        echo "<h2>student_registration table structure:</h2>";
-        $stmt = $conn->query("DESCRIBE student_registration");
+    // Show student_registrations table structure
+    if (in_array('student_registrations', $tables)) {
+        echo "<h2>student_registrations table structure:</h2>";
+        $stmt = $conn->query("DESCRIBE student_registrations");
         $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo "<pre>";
         print_r($columns);
         echo "</pre>";
     }
     
-    // If study_centres exists, show structure
-    if (in_array('study_centres', $tables)) {
-        echo "<h2>study_centres table structure:</h2>";
-        $stmt = $conn->query("DESCRIBE study_centres");
+    // Show study_centers table structure
+    if (in_array('study_centers', $tables)) {
+        echo "<h2>study_centers table structure:</h2>";
+        $stmt = $conn->query("DESCRIBE study_centers");
         $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo "<pre>";
         print_r($columns);
