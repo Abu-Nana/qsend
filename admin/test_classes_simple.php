@@ -45,8 +45,12 @@ try {
 }
 
 try {
-    $fpdf = new \setasign\Fpdf\Fpdf();
-    echo "✅ FPDF instantiated successfully<br>";
+    if (class_exists('setasign\Fpdf\Fpdf')) {
+        $fpdf = new \setasign\Fpdf\Fpdf();
+        echo "✅ FPDF instantiated successfully<br>";
+    } else {
+        echo "❌ FPDF class not available<br>";
+    }
 } catch (Exception $e) {
     echo "❌ FPDF failed: " . $e->getMessage() . "<br>";
 }
