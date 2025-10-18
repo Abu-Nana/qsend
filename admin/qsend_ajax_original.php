@@ -96,31 +96,48 @@ try {
     $files_table = "files";
 
     writeLog("Database connection established");
+    writeLog("Session admin ID: " . $_SESSION['admin']);
 
     // Query to get study centers and their courses
     $script = "SELECT s.id, s.matric_number, s.study_center, s.study_center_code, s.course, s.exam_day, s.exam_session, s.exa_date, c.study_center_code, c.study_centre_email, c.phone_number, c.director 
-                FROM student_registrations s
-                INNER JOIN study_centers c 
+                FROM student_registration s
+                INNER JOIN study_centres c 
                 ON c.study_center_code = s.study_center_code 
                 WHERE s.exam_session = ? 
                 AND s.exam_day = ?
                 GROUP BY c.study_center_code, s.course";
 
-    $stmt = $conn->prepare($script);
+    try {
+        $stmt = $conn->prepare($script);
+        writeLog("Prepared statement: $script");
 
-    if (!$stmt) {
-        writeLog("ERROR: Database query preparation failed");
+        if (!$stmt) {
+            writeLog("ERROR: Database query preparation failed");
+            ob_clean();
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'message' => 'Database query preparation failed'
+            ]);
+            exit;
+        }
+
+        $stmt->execute([$exam_session, $day]);
+        $query_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+    } catch (Exception $e) {
+        writeLog("ERROR: Database query failed: " . $e->getMessage());
         ob_clean();
         header('Content-Type: application/json');
         echo json_encode([
             'success' => false,
-            'message' => 'Database query preparation failed'
+            'message' => 'Database error: ' . $e->getMessage()
         ]);
         exit;
     }
-
-    $stmt->execute([$exam_session, $day]);
-    $query_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    writeLog("Query executed with session: '$exam_session', day: '$day'");
+    writeLog("Query returned " . count($query_data) . " rows");
 
     if (!$query_data) {
         writeLog("ERROR: Database query failed");
