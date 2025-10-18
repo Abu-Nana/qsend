@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     nano \
+    composer \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -38,7 +39,13 @@ WORKDIR /var/www/html
 # Create necessary directories and set permissions
 # Note: Code will be mounted as volume, not copied
 RUN mkdir -p /var/www/html/logs \
+    /var/www/html/temp \
+    /var/www/html/deacompress \
+    /var/www/html/DEASemester \
+    /var/www/html/vendor3 \
     && chmod -R 755 /var/www/html \
+    && chmod -R 777 /var/www/html/temp \
+    && chmod -R 777 /var/www/html/deacompress \
     && chown -R www-data:www-data /var/www/html
 
 # Configure Apache

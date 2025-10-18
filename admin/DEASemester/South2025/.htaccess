@@ -1,0 +1,17 @@
+# Security Configuration for South2025 Subdirectory
+# This file prevents direct browser access to exam questions
+
+# Disable directory listing
+Options -Indexes
+
+# Deny all direct access
+<RequireAll>
+    Require all denied
+</RequireAll>
+
+# Block all file types from direct access
+<FilesMatch ".*">
+    <RequireAll>
+        Require all denied
+    </RequireAll>
+</FilesMatch>
