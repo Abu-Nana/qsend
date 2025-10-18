@@ -139,13 +139,13 @@ try {
     writeLog("Query executed with session: '$exam_session', day: '$day'");
     writeLog("Query returned " . count($query_data) . " rows");
 
-    if (!$query_data) {
-        writeLog("ERROR: Database query failed");
+    if (empty($query_data)) {
+        writeLog("ERROR: No data found for exam session and day");
         ob_clean();
         header('Content-Type: application/json');
         echo json_encode([
             'success' => false,
-            'message' => 'Database query failed'
+            'message' => 'No data found for the specified exam session and day'
         ]);
         exit;
     }
@@ -182,6 +182,7 @@ try {
     $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown IP';
 
     writeLog("Processing $total_centers study centers");
+    writeLog("User info - Username: $username, Full Name: $fullName");
 
     // Process each study center
     foreach ($centers as $center => $value) {
@@ -206,6 +207,14 @@ try {
             $email = isset($value[0]['study_centre_email']) ? $value[0]['study_centre_email'] : '';
 
             writeLog("Center: $study_center, Email: $email, Director: $director");
+            
+            if (empty($email)) {
+                writeLog("WARNING: No email found for center $center");
+                $recipient_data['error_message'] = 'No email address found';
+                $recipients[] = $recipient_data;
+                $failed_count++;
+                continue;
+            }
 
             $recipient_data['study_center'] = $study_center;
             $recipient_data['director'] = $director;
@@ -243,29 +252,41 @@ try {
                     $destination_file = $folder_path . "/" . $obj['course'] . ".pdf";
 
                     writeLog("Processing course: " . $obj['course']);
+                    writeLog("Source file: $source_file");
 
                     if (file_exists($source_file)) {
                         copy($source_file, $destination_file);
+                        writeLog("Copied file: $source_file to $destination_file");
                         
                         // Add watermark using FPDI
-                        $pdf = new FPDI();
-                        $pageCount = $pdf->setSourceFile($destination_file);
-                        for ($i = 1; $i <= $pageCount; $i++) {
-                            $tplIdx = $pdf->importPage($i);
-                            $pdf->AddPage();
-                            $pdf->useTemplate($tplIdx, 10, 10, 200);
-                            $pdf->SetFont('Arial', '', 5);
-                            $pdf->SetTextColor(255, 255, 255); // White text
-                            $pdf->SetXY(10, 10);
-                            $pdf->Write(0, "Study Centre: " . $study_center . " (" . $center . ")");
+                        try {
+                            $pdf = new FPDI();
+                            $pageCount = $pdf->setSourceFile($destination_file);
+                            writeLog("PDF has $pageCount pages");
+                            
+                            for ($i = 1; $i <= $pageCount; $i++) {
+                                $tplIdx = $pdf->importPage($i);
+                                $pdf->AddPage();
+                                $pdf->useTemplate($tplIdx, 10, 10, 200);
+                                $pdf->SetFont('Arial', '', 5);
+                                $pdf->SetTextColor(255, 255, 255); // White text
+                                $pdf->SetXY(10, 10);
+                                $pdf->Write(0, "Study Centre: " . $study_center . " (" . $center . ")");
+                            }
+                            $pdf->Output($destination_file, 'F');
+                            
+                            // Add to ZIP with encryption
+                            $zip->addFile($destination_file, basename($destination_file));
+                            $zip->setEncryptionName(basename($destination_file), ZipArchive::EM_AES_256, $password);
+                            $status = true;
+                            writeLog("Added watermarked PDF to ZIP: " . $obj['course']);
+                        } catch (Exception $pdf_error) {
+                            writeLog("ERROR: PDF processing failed: " . $pdf_error->getMessage());
+                            // Continue without watermarking
+                            $zip->addFile($destination_file, basename($destination_file));
+                            $zip->setEncryptionName(basename($destination_file), ZipArchive::EM_AES_256, $password);
+                            $status = true;
                         }
-                        $pdf->Output($destination_file, 'F');
-                        
-                        // Add to ZIP with encryption
-                        $zip->addFile($destination_file, basename($destination_file));
-                        $zip->setEncryptionName(basename($destination_file), ZipArchive::EM_AES_256, $password);
-                        $status = true;
-                        writeLog("Added watermarked PDF to ZIP: " . $obj['course']);
                     } else {
                         writeLog("WARNING: Course PDF not found: $source_file");
                     }
@@ -279,11 +300,14 @@ try {
                     (study_center, student_center_name, exam_session, exam_day, password, file_name, sem, sentby, ip_address) 
                     VALUES (?, ?, ?, ?, ?, ?, '251', ?, ?)";
                 
-                $stmt_store = mysqli_prepare($connection, $store);
-                mysqli_stmt_bind_param($stmt_store, "ssssssss", $study_center, $center, $exam_session, $exam_day, $password, $zipfile, $fullName, $ipAddress);
-                mysqli_stmt_execute($stmt_store);
-                mysqli_stmt_close($stmt_store);
-                writeLog("Database record stored successfully");
+                try {
+                    $stmt_store = $conn->prepare($store);
+                    $stmt_store->execute([$study_center, $center, $exam_session, $exam_day, $password, $zipfile, $fullName, $ipAddress]);
+                    $stmt_store->closeCursor();
+                    writeLog("Database record stored successfully");
+                } catch (Exception $db_error) {
+                    writeLog("ERROR: Database insert failed: " . $db_error->getMessage());
+                }
 
                 // Clean up temp folder
                 if (file_exists($folder_path)) {
