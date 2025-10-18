@@ -126,8 +126,9 @@ $(function () {
 
   /* Morris.js Charts */
   // Sales chart
-  var area = new Morris.Area({
-    element   : 'revenue-chart',
+  if ($('#revenue-chart').length > 0) {
+    var area = new Morris.Area({
+      element   : 'revenue-chart',
     resize    : true,
     data      : [
       { y: '2011 Q1', item1: 2666, item2: 2666 },
@@ -146,9 +147,12 @@ $(function () {
     labels    : ['Item 1', 'Item 2'],
     lineColors: ['#a0d0e0', '#3c8dbc'],
     hideHover : 'auto'
-  });
-  var line = new Morris.Line({
-    element          : 'line-chart',
+    });
+  }
+  
+  if ($('#line-chart').length > 0) {
+    var line = new Morris.Line({
+      element          : 'line-chart',
     resize           : true,
     data             : [
       { y: '2011 Q1', item1: 2666 },
@@ -175,11 +179,13 @@ $(function () {
     gridLineColor    : '#efefef',
     gridTextFamily   : 'Open Sans',
     gridTextSize     : 10
-  });
+    });
+  }
 
   // Donut Chart
-  var donut = new Morris.Donut({
-    element  : 'sales-chart',
+  if ($('#sales-chart').length > 0) {
+    var donut = new Morris.Donut({
+      element  : 'sales-chart',
     resize   : true,
     colors   : ['#3c8dbc', '#f56954', '#00a65a'],
     data     : [
@@ -188,13 +194,14 @@ $(function () {
       { label: 'Mail-Order Sales', value: 20 }
     ],
     hideHover: 'auto'
-  });
+    });
+  }
 
   // Fix for charts under tabs
   $('.box ul.nav a').on('shown.bs.tab', function () {
-    area.redraw();
-    donut.redraw();
-    line.redraw();
+    if (typeof area !== 'undefined') area.redraw();
+    if (typeof donut !== 'undefined') donut.redraw();
+    if (typeof line !== 'undefined') line.redraw();
   });
 
   /* The todo list plugin */

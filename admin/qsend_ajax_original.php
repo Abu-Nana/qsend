@@ -15,7 +15,8 @@ ob_start();
 session_start();
 
 // Include database connection
-include 'includes/conn.php';
+require_once __DIR__ . '/../config/database.php';
+$conn = Database::getPDO();
 
 // Check if user is logged in
 if(!isset($_SESSION['admin']) || trim($_SESSION['admin']) == ''){
@@ -30,11 +31,9 @@ if(!isset($_SESSION['admin']) || trim($_SESSION['admin']) == ''){
 
 // Get user details
 $stmt = $conn->prepare("SELECT * FROM admin WHERE id = ?");
-$stmt->bind_param("s", $_SESSION['admin']);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-$stmt->close();
+$stmt->execute([$_SESSION['admin']]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt->closeCursor();
 
 if (!$user) {
     ob_clean();
@@ -93,8 +92,7 @@ try {
         exit;
     }
 
-    // Get database connection
-    $connection = require 'connection.php';
+    // Use existing database connection
     $files_table = "files";
 
     writeLog("Database connection established");
@@ -108,38 +106,37 @@ try {
                 AND s.exam_day = ?
                 GROUP BY c.study_center_code, s.course";
 
-    $stmt = mysqli_prepare($connection, $script);
+    $stmt = $conn->prepare($script);
 
     if (!$stmt) {
-        writeLog("ERROR: Database query preparation failed: " . mysqli_error($connection));
+        writeLog("ERROR: Database query preparation failed");
         ob_clean();
         header('Content-Type: application/json');
         echo json_encode([
             'success' => false,
-            'message' => 'Database query preparation failed: ' . mysqli_error($connection)
+            'message' => 'Database query preparation failed'
         ]);
         exit;
     }
 
-    mysqli_stmt_bind_param($stmt, "ss", $exam_session, $day);
-    mysqli_stmt_execute($stmt);
-    $query_data = mysqli_stmt_get_result($stmt);
+    $stmt->execute([$exam_session, $day]);
+    $query_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (!$query_data) {
-        writeLog("ERROR: Database query failed: " . mysqli_error($connection));
+        writeLog("ERROR: Database query failed");
         ob_clean();
         header('Content-Type: application/json');
         echo json_encode([
             'success' => false,
-            'message' => 'Database query failed: ' . mysqli_error($connection)
+            'message' => 'Database query failed'
         ]);
         exit;
     }
 
     // Organize data by center
     $centers = [];
-    if (mysqli_num_rows($query_data) > 0) {
-        while ($obj = mysqli_fetch_assoc($query_data)) {
+    if (count($query_data) > 0) {
+        foreach ($query_data as $obj) {
             $centers[$obj['study_center_code']][] = $obj;
         }
         writeLog("Found " . count($centers) . " study centers");
