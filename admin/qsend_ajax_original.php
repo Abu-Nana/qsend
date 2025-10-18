@@ -54,8 +54,8 @@ ini_set('max_execution_time', 300);
 
 // Check if vendor3/autoload.php exists
 $vendor_loaded = false;
-if (file_exists('vendor3/autoload.php')) {
-    require 'vendor3/autoload.php';
+if (file_exists(__DIR__ . '/../vendor3/autoload.php')) {
+    require __DIR__ . '/../vendor3/autoload.php';
     $vendor_loaded = true;
 } else {
     writeLog("WARNING: vendor3/autoload.php not found - PDF processing will be limited");
