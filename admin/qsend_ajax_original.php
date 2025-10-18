@@ -100,8 +100,8 @@ try {
 
     // Query to get study centers and their courses
     $script = "SELECT s.id, s.matric_number, s.study_center, s.study_center_code, s.course, s.exam_day, s.exam_session, s.exa_date, c.study_center_code, c.study_centre_email, c.phone_number, c.director 
-                FROM student_registration s
-                INNER JOIN study_centres c 
+                FROM student_registrations s
+                INNER JOIN study_centers c 
                 ON c.study_center_code = s.study_center_code 
                 WHERE s.exam_session = ? 
                 AND s.exam_day = ?
