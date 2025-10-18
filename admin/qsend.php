@@ -807,7 +807,7 @@ $(document).ready(function(){
     console.log('Form data being sent:', formData);
     
     // Determine which AJAX handler to use
-    var ajaxUrl = (examType === 'makeup') ? 'qsend_ajax_makeup.php' : 'qsend_ajax_simplified.php';
+    var ajaxUrl = (examType === 'makeup') ? 'qsend_ajax_makeup.php' : 'qsend_ajax_debug_simple.php';
     console.log('Using AJAX URL:', ajaxUrl);
     
     // Send AJAX request
