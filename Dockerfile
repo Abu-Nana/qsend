@@ -46,6 +46,7 @@ RUN mkdir -p /var/www/html/logs \
     && chmod -R 755 /var/www/html \
     && chmod -R 777 /var/www/html/temp \
     && chmod -R 777 /var/www/html/deacompress \
+    && chmod -R 777 /var/www/html/logs \
     && chown -R www-data:www-data /var/www/html
 
 # Configure Apache
