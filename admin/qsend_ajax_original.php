@@ -53,16 +53,12 @@ set_time_limit(300); // 5 minutes
 ini_set('max_execution_time', 300);
 
 // Check if vendor3/autoload.php exists
+$vendor_loaded = false;
 if (file_exists('vendor3/autoload.php')) {
     require 'vendor3/autoload.php';
-    use setasign\Fpdi\Fpdi;
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\Exception;
-    use PHPMailer\PHPMailer\SMTP;
     $vendor_loaded = true;
 } else {
     writeLog("WARNING: vendor3/autoload.php not found - PDF processing will be limited");
-    $vendor_loaded = false;
 }
 
 // Create log file
@@ -268,7 +264,7 @@ try {
                         // Add watermark using FPDI (if available)
                         if ($vendor_loaded && class_exists('setasign\Fpdi\Fpdi')) {
                             try {
-                                $pdf = new FPDI();
+                                $pdf = new \setasign\Fpdi\Fpdi();
                                 $pageCount = $pdf->setSourceFile($destination_file);
                                 writeLog("PDF has $pageCount pages");
                                 
@@ -439,7 +435,7 @@ function sendEmailOriginal($email, $attachment, $password, $subject, $body, $stu
     
     try {
         // Use the exact same PHPMailer setup as mailerbatch1.php
-        $mail = new PHPMailer(true);
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
         
         // Server settings (from mailerbatch1.php)
         $mail->isSMTP();
